@@ -1,0 +1,281 @@
+num_buckets not specified with -t, set to default value num_buckets=21
+node_threashold not specified with -n, set to default value node_threashold=100K
+K-mer size: 32, L-mer size: 8, Number of Processes: 224, MAX_KMER_COUNT: 1000000000 Coverage: 100,Avg read length: 100, Num buckets: 21, Node threshold: 100000
+Average time for MPI_FIle_Open (secs): 0.220952 
+Average time for MPI_FIle_Read (secs): 0.331170 
+Average time for MPI_FIle_copy (secs): 0.023520 
+Average time for MPI_FIle_Close (secs): 0.016230 
+Average time for reading and storing the Reads in each proc's memory (secs): 0.592099 
+Total number of reads: 30000000
+Average time for Alltoall across all procs (secs): 0.000103 
+Average time for pack_sbuf_time across all procs (secs): 0.000000 
+Average time for AlltoallV across all procs (secs): 0.207387 
+Average time for unpack_rbuf_time across all procs (secs): 0.499836 
+Average time for unpack_rbuf_time:sort across all procs (secs): 0.442482 
+Average time for unpack_rbuf_time:insert across all procs (secs): 0.031215 
+Average time for unpack_rbuf_time:acc across all procs (secs): 0.025784 
+Average time for partial Sliding Window across all procs (secs): 0.000000 
+Average time for Sliding Window across all procs (secs): 1.974435 
+Average time for lmer Sliding Window across all procs (secs): 0.025434 
+Average time for vector insert across all procs (secs): 0.000000 
+Average time for temp_map insert across all procs (secs): 0.000000 
+Average number of re-calculations of min l-mer across all procs (secs): 0.000000 
+Average time for performing k-mer counting across all procs (secs): 2.003139 
+Total distinct k-mer entries across all proc's: 415814444
+Number of batch iterations: 1 
+Number of threads: 96
+Total valid (>= min_bucket(20)) k-mer entries across all proc's: 17682805 
+**********************************************************************
+
+Average time for communication in Transfer of MN nodes (secs): 0.013366 
+Average time for Re-grouping for k-mers across all procs (secs): 0.148678 
+Average time for identifying the macro_nodes (secs): 0.030872 
+Average time for sorting the pref/suff kmer buffers (secs): 0.039215 
+Average time for populating the suff and pref buffers (secs): 0.066844 
+Average time for constructing MN map across all procs (secs): 0.137833 
+Total number of macro_nodes across all proc's: 17516875
+Average time for MN node construction across all procs (secs): 0.559581 
+Average time for initial wiring of MN nodes across all procs (secs): 0.064335 
+
+Itr: 1, Total number of macro_nodes across all proc's: 17516875 [min=74871 max=82370] expected=78200.334821
+part1: id set creation (itr: 1)  (secs): 0.004849 
+Itr: 1, global ID_set size across all proc's: 5080916
+part2: iterate and pack  (itr: 1)  (secs): 0.409279 
+part3: serialize and update communication time  (secs): 0.009061 
+
+part3: serialize and update nodes (itr: 1)  (secs): 0.080829 
+
+Itr: 1, Total time for this iteration: 0.497088
+
+Itr: 2, Total number of macro_nodes across all proc's: 12435959 [min=52493 max=58324] expected=55517.674107
+part1: id set creation (itr: 2)  (secs): 0.004173 
+Itr: 2, global ID_set size across all proc's: 3095656
+part2: iterate and pack  (itr: 2)  (secs): 0.314932 
+part3: serialize and update communication time  (secs): 0.007187 
+
+part3: serialize and update nodes (itr: 2)  (secs): 0.050730 
+
+Itr: 2, Total time for this iteration: 0.371707
+
+Itr: 3, Total number of macro_nodes across all proc's: 9340303 [min=39562 max=43814] expected=41697.781250
+part1: id set creation (itr: 3)  (secs): 0.003357 
+Itr: 3, global ID_set size across all proc's: 2312298
+part2: iterate and pack  (itr: 3)  (secs): 0.282480 
+part3: serialize and update communication time  (secs): 0.006168 
+
+part3: serialize and update nodes (itr: 3)  (secs): 0.038927 
+
+Itr: 3, Total time for this iteration: 0.325989
+
+Itr: 4, Total number of macro_nodes across all proc's: 7028005 [min=29824 max=33420] expected=31375.022321
+part1: id set creation (itr: 4)  (secs): 0.002576 
+Itr: 4, global ID_set size across all proc's: 1760854
+part2: iterate and pack  (itr: 4)  (secs): 0.262325 
+part3: serialize and update communication time  (secs): 0.008177 
+
+part3: serialize and update nodes (itr: 4)  (secs): 0.032932 
+
+Itr: 4, Total time for this iteration: 0.298776
+
+Itr: 5, Total number of macro_nodes across all proc's: 5267151 [min=22262 max=25535] expected=23514.066964
+part1: id set creation (itr: 5)  (secs): 0.001857 
+Itr: 5, global ID_set size across all proc's: 1289830
+part2: iterate and pack  (itr: 5)  (secs): 0.242175 
+part3: serialize and update communication time  (secs): 0.004848 
+
+part3: serialize and update nodes (itr: 5)  (secs): 0.024892 
+
+Itr: 5, Total time for this iteration: 0.269844
+
+Itr: 6, Total number of macro_nodes across all proc's: 3977321 [min=16773 max=19761] expected=17755.897321
+part1: id set creation (itr: 6)  (secs): 0.001353 
+Itr: 6, global ID_set size across all proc's: 964566
+part2: iterate and pack  (itr: 6)  (secs): 0.212011 
+part3: serialize and update communication time  (secs): 0.004124 
+
+part3: serialize and update nodes (itr: 6)  (secs): 0.017831 
+
+Itr: 6, Total time for this iteration: 0.232320
+
+Itr: 7, Total number of macro_nodes across all proc's: 3012755 [min=12616 max=15247] expected=13449.799107
+part1: id set creation (itr: 7)  (secs): 0.000982 
+Itr: 7, global ID_set size across all proc's: 710963
+part2: iterate and pack  (itr: 7)  (secs): 0.191530 
+part3: serialize and update communication time  (secs): 0.002608 
+
+part3: serialize and update nodes (itr: 7)  (secs): 0.018674 
+
+Itr: 7, Total time for this iteration: 0.213361
+
+Itr: 8, Total number of macro_nodes across all proc's: 2301792 [min=9521 max=11766] expected=10275.857143
+part1: id set creation (itr: 8)  (secs): 0.000748 
+Itr: 8, global ID_set size across all proc's: 533607
+part2: iterate and pack  (itr: 8)  (secs): 0.192582 
+part3: serialize and update communication time  (secs): 0.001677 
+
+part3: serialize and update nodes (itr: 8)  (secs): 0.008971 
+
+Itr: 8, Total time for this iteration: 0.204022
+
+Itr: 9, Total number of macro_nodes across all proc's: 1768185 [min=7270 max=9182] expected=7893.683036
+part1: id set creation (itr: 9)  (secs): 0.000573 
+Itr: 9, global ID_set size across all proc's: 405750
+part2: iterate and pack  (itr: 9)  (secs): 0.181739 
+part3: serialize and update communication time  (secs): 0.001497 
+
+part3: serialize and update nodes (itr: 9)  (secs): 0.007067 
+
+Itr: 9, Total time for this iteration: 0.189816
+
+Itr: 10, Total number of macro_nodes across all proc's: 1362435 [min=5536 max=7283] expected=6082.299107
+part1: id set creation (itr: 10)  (secs): 0.000450 
+Itr: 10, global ID_set size across all proc's: 308304
+part2: iterate and pack  (itr: 10)  (secs): 0.161833 
+part3: serialize and update communication time  (secs): 0.001375 
+
+part3: serialize and update nodes (itr: 10)  (secs): 0.007267 
+
+Itr: 10, Total time for this iteration: 0.170364
+
+Itr: 11, Total number of macro_nodes across all proc's: 1054131 [min=4268 max=5742] expected=4705.941964
+part1: id set creation (itr: 11)  (secs): 0.000359 
+Itr: 11, global ID_set size across all proc's: 233535
+part2: iterate and pack  (itr: 11)  (secs): 0.155074 
+part3: serialize and update communication time  (secs): 0.000968 
+
+part3: serialize and update nodes (itr: 11)  (secs): 0.005531 
+
+Itr: 11, Total time for this iteration: 0.162408
+
+Itr: 12, Total number of macro_nodes across all proc's: 820596 [min=3281 max=4548] expected=3663.375000
+part1: id set creation (itr: 12)  (secs): 0.000292 
+Itr: 12, global ID_set size across all proc's: 177000
+part2: iterate and pack  (itr: 12)  (secs): 0.149538 
+part3: serialize and update communication time  (secs): 0.001011 
+
+part3: serialize and update nodes (itr: 12)  (secs): 0.007426 
+
+Itr: 12, Total time for this iteration: 0.159147
+
+Itr: 13, Total number of macro_nodes across all proc's: 643596 [min=2527 max=3617] expected=2873.196429
+part1: id set creation (itr: 13)  (secs): 0.000262 
+Itr: 13, global ID_set size across all proc's: 135076
+part2: iterate and pack  (itr: 13)  (secs): 0.136249 
+part3: serialize and update communication time  (secs): 0.000875 
+
+part3: serialize and update nodes (itr: 13)  (secs): 0.005218 
+
+Itr: 13, Total time for this iteration: 0.149804
+
+Itr: 14, Total number of macro_nodes across all proc's: 508520 [min=1982 max=2917] expected=2270.178571
+part1: id set creation (itr: 14)  (secs): 0.000263 
+Itr: 14, global ID_set size across all proc's: 103142
+part2: iterate and pack  (itr: 14)  (secs): 0.134174 
+part3: serialize and update communication time  (secs): 0.007394 
+
+part3: serialize and update nodes (itr: 14)  (secs): 0.014053 
+
+Itr: 14, Total time for this iteration: 0.155972
+
+Itr: 15, Total number of macro_nodes across all proc's: 405378 [min=1559 max=2437] expected=1809.723214
+part1: id set creation (itr: 15)  (secs): 0.000277 
+Itr: 15, global ID_set size across all proc's: 79481
+part2: iterate and pack  (itr: 15)  (secs): 0.127622 
+part3: serialize and update communication time  (secs): 0.006395 
+
+part3: serialize and update nodes (itr: 15)  (secs): 0.015138 
+
+Itr: 15, Total time for this iteration: 0.150058
+
+Itr: 16, Total number of macro_nodes across all proc's: 325897 [min=1239 max=2014] expected=1454.897321
+part1: id set creation (itr: 16)  (secs): 0.000269 
+Itr: 16, global ID_set size across all proc's: 61718
+part2: iterate and pack  (itr: 16)  (secs): 0.124200 
+part3: serialize and update communication time  (secs): 0.001901 
+
+part3: serialize and update nodes (itr: 16)  (secs): 0.007536 
+
+Itr: 16, Total time for this iteration: 0.140065
+
+Itr: 17, Total number of macro_nodes across all proc's: 264179 [min=993 max=1715] expected=1179.370536
+part1: id set creation (itr: 17)  (secs): 0.000260 
+Itr: 17, global ID_set size across all proc's: 47651
+part2: iterate and pack  (itr: 17)  (secs): 0.119160 
+part3: serialize and update communication time  (secs): 0.000772 
+
+part3: serialize and update nodes (itr: 17)  (secs): 0.005319 
+
+Itr: 17, Total time for this iteration: 0.130235
+
+Itr: 18, Total number of macro_nodes across all proc's: 216528 [min=784 max=1452] expected=966.642857
+part1: id set creation (itr: 18)  (secs): 0.000426 
+Itr: 18, global ID_set size across all proc's: 37034
+part2: iterate and pack  (itr: 18)  (secs): 0.115963 
+part3: serialize and update communication time  (secs): 0.000675 
+
+part3: serialize and update nodes (itr: 18)  (secs): 0.003170 
+
+Itr: 18, Total time for this iteration: 0.123863
+
+Itr: 19, Total number of macro_nodes across all proc's: 179494 [min=651 max=1250] expected=801.312500
+part1: id set creation (itr: 19)  (secs): 0.000250 
+Itr: 19, global ID_set size across all proc's: 28419
+part2: iterate and pack  (itr: 19)  (secs): 0.106662 
+part3: serialize and update communication time  (secs): 0.000576 
+
+part3: serialize and update nodes (itr: 19)  (secs): 0.003134 
+
+Itr: 19, Total time for this iteration: 0.114421
+
+Itr: 20, Total number of macro_nodes across all proc's: 151075 [min=525 max=1069] expected=674.441964
+part1: id set creation (itr: 20)  (secs): 0.000102 
+Itr: 20, global ID_set size across all proc's: 21578
+part2: iterate and pack  (itr: 20)  (secs): 0.000997 
+part3: serialize and update communication time  (secs): 0.002350 
+
+part3: serialize and update nodes (itr: 20)  (secs): 0.004418 
+
+Itr: 20, Total time for this iteration: 0.007640
+
+Itr: 21, Total number of macro_nodes across all proc's: 129497 [min=447 max=924] expected=578.111607
+part1: id set creation (itr: 21)  (secs): 0.000061 
+Itr: 21, global ID_set size across all proc's: 16319
+part2: iterate and pack  (itr: 21)  (secs): 0.000851 
+part3: serialize and update communication time  (secs): 0.000404 
+
+part3: serialize and update nodes (itr: 21)  (secs): 0.001199 
+
+Itr: 21, Total time for this iteration: 0.003766
+
+Itr: 22, Total number of macro_nodes across all proc's: 113178 [min=370 max=830] expected=505.258929
+part1: id set creation (itr: 22)  (secs): 0.000047 
+Itr: 22, global ID_set size across all proc's: 12660
+part2: iterate and pack  (itr: 22)  (secs): 0.000635 
+part3: serialize and update communication time  (secs): 0.000353 
+
+part3: serialize and update nodes (itr: 22)  (secs): 0.001005 
+
+Itr: 22, Total time for this iteration: 0.001945
+
+Itr: 23, Total number of macro_nodes across all proc's: 100518 [min=321 max=757] expected=448.741071
+part1: id set creation (itr: 23)  (secs): 0.000041 
+Itr: 23, global ID_set size across all proc's: 9982
+part2: iterate and pack  (itr: 23)  (secs): 0.000580 
+part3: serialize and update communication time  (secs): 0.000391 
+
+part3: serialize and update nodes (itr: 23)  (secs): 0.000887 
+
+Itr: 23, Total time for this iteration: 0.001716
+
+Itr: 24, Total number of macro_nodes across all proc's: 90536 [min=289 max=691] expected=404.178571
+Average time for part1: id set creation across all procs (secs): 0.023827 
+Average time for part2: packing nodes across all procs (secs): 3.622591 
+Average time for part3: update nodes across all procs (secs): 0.362151 
+Average time for phase to merge and dropping of nodes across all procs (secs): 4.074335 
+
+Average time for Alltoall in Serialize and Transfer (secs): 0.009991 
+Average time for AlltoallV in Serialize and Transfer (secs): 0.060794 
+[StopClock: pakman-original-elapsed-time-no-io]: 7.09193 sec
+
+[StopClock: pakman-original-elapsed-time-full]: 11.1474 sec
+

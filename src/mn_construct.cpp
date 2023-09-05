@@ -228,14 +228,32 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
         /* check if k-mer is candidate for macro_node creation */
         kmer_t full_kmer = all_kmers_from_procs[f].seq;
 
+        // NOTE(vamsikku): Invariant: this processor should own either 
+        // the suffix ore prefix.
+
         pred_k_1 = (kmer_t)full_kmer ^ 1;
         pred_k_1 = mn_shift(pred_k_1);
-        if (retrieve_proc_id(pred_k_1) == rank)
+        bool prefix_owned = false;
+        if (retrieve_proc_id(pred_k_1) == rank) {
             tmp_mn_nodes.push_back(pred_k_1);
+            prefix_owned = true;
+        } 
 
+        bool suffix_owned = false;
         succ_k_1 = (kmer_t)full_kmer & (kmer_t)SUCC_MASK;
-        if (retrieve_proc_id(succ_k_1) == rank)
+        if (retrieve_proc_id(succ_k_1) == rank) {
             tmp_mn_nodes.push_back(succ_k_1);
+            suffix_owned = true;
+        } 
+        
+        
+        if (!(prefix_owned || suffix_owned)) {
+          std::cerr << "[Suffix-Prefix-Owner-Invariant] failed rank=" << rank
+            << " suffix_rank=" << retrieve_proc_id(succ_k_1) 
+            << " prefix_rank=" << retrieve_proc_id(pred_k_1)
+            << std::endl;
+          MPI_Abort(MPI_COMM_WORLD, -99);
+        }
     }
 
     //sort and unique to obtain the list of distinct macro nodes for each thread
@@ -292,46 +310,6 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
     if (rank == 0) printf ("Average time for sorting the pref/suff kmer buffers (secs): %f \n", 
                             (double)global_sort_time/(double)size);
 
-#ifdef DEBUG_SORT
-  //FILE *f = fopen("sort_by_suffixes.txt", "w");
-  std::string outfile1="sort_by_pref_"+std::to_string(rank)+".log";
-  FILE *f = fopen(outfile1.c_str(), "w"); 
-  //FILE *f = fopen("sort_by_prefixes.txt", "w"); 
-
-  char kmer_str[KMER_LENGTH+1];
-
-  for (size_t i=0; i<all_kmers_from_procs.size(); i++) {
-
-      for (int k=0; k<KMER_LENGTH; k++) {
-           kmer_str[k] = el_to_char(kmerel(all_kmers_from_procs[i].seq, k));
-      }
-      kmer_str[KMER_LENGTH] = '\0';
-
-      fprintf(f, "%s, %lu\n", kmer_str, all_kmers_from_procs[i].seq);
-  }
-
-  fclose(f);
-
-  //f = fopen("mn_list.txt", "w");
-  std::string outfile2="mn_list_"+std::to_string(rank)+".log";
-  f = fopen(outfile2.c_str(), "w"); 
-
-  char mn_str[MN_LENGTH+1];
-
-  for (size_t i=0; i<list_of_mn_nodes.size(); i++) {
-
-      for (int k=0; k<MN_LENGTH; k++) {
-           mn_str[k] = el_to_char(kmerel_mn(list_of_mn_nodes[i], k));
-      }
-      mn_str[MN_LENGTH] = '\0';
-
-      fprintf(f, "%s, %lu\n", mn_str, list_of_mn_nodes[i]);
-  }
-
-  fclose(f);
-
-#endif
-
     double mn5 = MPI_Wtime ();
     //begin populating the prefixes and suffixes of nodes in MN_map
     //we block partition and assign distinct macro nodes to each of the threads
@@ -360,18 +338,7 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
 
     //kmer_t tmp_pred_k = 0;
     if (omp_get_thread_num() == num_threads-1){
-        //printf("rank: %d, num_kmers: %lu, num_mn: %lu\n", rank, all_kmers_from_procs.size(), MN_map.size());
-
-        /*printf("rank: %d, before: hi: %lu, mn_at_hi: %lu, k_hi_pos: %lu, kmer_at_hi: %lu\n", 
-                rank, hi, list_of_mn_nodes[hi], k_hi_pos, all_kmers_from_procs[k_hi_pos].seq);
-        tmp_pred_k = (kmer_t)all_kmers_from_procs[k_hi_pos].seq ^ 1;
-        tmp_pred_k = mn_shift(tmp_pred_k);
-        printf("rank: %d, predk at hi: %lu\n", rank, tmp_pred_k);
-        */
         k_hi_pos = all_kmers_from_procs.size();
-
-        //printf("rank: %d, after: hi: %lu, mn_at_hi: %lu, k_hi_pos: %lu, kmer_at_high: %lu\n", 
-        //        rank, hi, list_of_mn_nodes[hi], k_hi_pos, all_kmers_from_procs[k_hi_pos].seq);
     }
 
     //iterate over kmer list to populate the suffixes
@@ -389,14 +356,6 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
         {
 
             if (pred_k != last_mn) {
-                /*while (1) {
-                    printf("rank: %d, in_while: thread: %d, pred_k: %lu, last_mn: %lu, LO: %lu, k_lo: %lu\n", 
-                            rank, omp_get_thread_num(), pred_k, last_mn, lo, f);
-                    if (MN_map[lo].first == pred_k)
-                        break;
-                    else
-                        lo++;
-                }*/
                 while (MN_map[lo].first != pred_k) {
                        lo++;
                 }
@@ -408,9 +367,6 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
             }
 
             assert(pred_k == last_mn);
-
-            //if (pred_k == tmp_pred_k)
-            //    printf("in rank: %d, found last mn: %lu, lo: %lu, mn_at_lo: %lu\n", rank, tmp_pred_k, lo, MN_map[lo].first);
 
             MacroNode &mn_val = MN_map[lo].second;
             if (mn_val.k_1_mer.size() == 0) 
@@ -426,6 +382,8 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
             BasePairVector suff;
             suff.push_back(kmerel(full_kmer, MN_LENGTH));
             mn_val.suffixes.push_back(suff);
+            //vamsikku: w.l.o.g every macro node gets added terminal prefix
+            //terminal suffix with (-1,-1) //
             mn_val.suffixes_terminal.push_back(false);
             mn_val.suffix_count.push_back(std::make_pair(kmer_count, visit_value(kmer_count)));
         }
@@ -491,6 +449,7 @@ void construct_macro_nodes (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
             BasePairVector pred;
             pred.push_back(kmerel(full_kmer, 0));
             mn_val.prefixes.push_back(pred);
+            //vamsikku: during initial construction there are no terminals //
             mn_val.prefixes_terminal.push_back(false);
             mn_val.prefix_count.push_back(std::make_pair(kmer_count, visit_value(kmer_count)));
         }

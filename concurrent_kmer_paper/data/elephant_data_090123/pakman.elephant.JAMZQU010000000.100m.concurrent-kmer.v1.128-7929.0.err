@@ -1,0 +1,18 @@
+Start Reading the input dataset
+filesize: 13073266732, localsize: 102135096
+dest_offset: 0, localsize: 102135096
+initial locstart: 0, locend: 102135096
+new localsize: 102134973, locstart: 0, locend: 102134973
+Total number of reads: 100000000
+Completed Reading the input dataset
+Starting sliding window
+Completed sliding window
+Completed kmer counting
+Identified min_bucket
+Starting transfer_macro_nodes 
+Begin macro node generation
+Starting construct_macro_nodes
+Completed MN node construction. Starting wiring
+Completed wiring of Macro nodes
+Starting phase 2 iterative phase
+Completed iterative phase 2

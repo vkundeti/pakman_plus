@@ -58,9 +58,13 @@
 #include <omp.h>
 #include "distribute_kmers.h"
 #include "timers.h"
-//#include "serial.h"
+#include "stop_clock.hpp"
 
-long int MAX_KMER_COUNT=0;
+typedef typename intel::esc::stop_clock_t stop_clock_t; 
+
+// #include"serial.h"
+
+size_t MAX_KMER_COUNT=0;
 int rank, size;
 int coverage=0;
 std::string inputFileName;
@@ -69,6 +73,9 @@ int num_buckets=0;
 int num_threads=0;
 int num_contigs=0;
 int node_threashold=0;
+bool USE_NEW_SORT_AGGREGATE=false;
+bool USE_CONCURRENT_KMER_ALGO=false;
+int  USE_CONCURRENT_KMER_ALGO_VERSION=0;
 
 int num_batch_transfers=0;
 long int this_contig_id = 0;
@@ -123,6 +130,7 @@ void set_num_threads()
 }
 
 int main(int argc, char **argv) {
+		stop_clock_t clock_full("pakman-original-elapsed-time-full", stdout, true);
 
     MPI_Init(&argc, &argv);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
@@ -135,6 +143,7 @@ int main(int argc, char **argv) {
     input_read_data rdata = perform_input_reading(rank, size, inputFileName, read_length);
 
 
+		stop_clock_t clock_no_io("pakman-original-elapsed-time-no-io", stdout, true);
     perform_kmer_counting (rdata.read_data, rdata.read_data_size);
     free(rdata.read_data);
 
@@ -196,6 +205,12 @@ int main(int argc, char **argv) {
     MPI_Barrier(MPI_COMM_WORLD);
 
     MPI_Finalize();
+
+
+    if (rank == 0) {
+      clock_no_io.report_elapsed_time();
+      clock_full.report_elapsed_time();
+    }
     return 0;
 }
 
@@ -203,15 +218,16 @@ void parseCommandLine(const int argc, char * const argv[])
 {
   int ret;
 
-  while ((ret = getopt(argc, argv, "f:b:r:c:t:n:")) != -1) {
+  while ((ret = getopt(argc, argv, "f:b:r:c:t:n:ip:")) != -1) {
     switch (ret) {
     case 'f':
        inputFileName.assign(optarg);
        //std::cout << inputFileName << std::endl;
        break;
     case 'b':
-       MAX_KMER_COUNT = atol(optarg);
-       //std::cout << MAX_KMER_COUNT << std::endl;
+       if (sscanf(optarg, "%lu", &MAX_KMER_COUNT) != 1) {
+         throw std::logic_error("[Invalid option of -b " + std::string(optarg));
+       }
        break;
     case 'r':
        read_length = atoi(optarg);
@@ -229,6 +245,17 @@ void parseCommandLine(const int argc, char * const argv[])
        node_threashold = atoi(optarg);
        //std::cout << node_threashold << std::endl;
        break;
+
+    case 'i':
+       USE_NEW_SORT_AGGREGATE = true;
+       break;
+
+    case 'p':
+       USE_CONCURRENT_KMER_ALGO = true;
+       USE_CONCURRENT_KMER_ALGO_VERSION = atoi(optarg);
+       break;
+
+
     default:
        assert(0 && "Should not reach here!!");
        break;

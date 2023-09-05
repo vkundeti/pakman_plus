@@ -309,6 +309,5 @@ input_read_data perform_input_reading (const int rank, const int size,
         fprintf(stderr, "Completed Reading the input dataset\n");
 
     return input_rdata;
-
 }
 

@@ -156,6 +156,14 @@ class BasePairVector {
     vec_[idx] = ((vec_[idx]<<bsize) | val) & static_cast<T>(BASE_MASK);
   };
 
+  std::string to_string() const {
+    std::string ret;
+    for (size_t i=0; i<size_; i++) {
+      ret.push_back(get(i));
+    }
+    return ret;
+  }
+
 
 
   void push_back(BasePair val) {
@@ -697,6 +705,12 @@ typedef struct __attribute__ ((__packed__)) kmer_pairs
   int k_count;
 
 } KmerPairs;
+
+typedef struct __attribute__ ((__packed__)) kmer_pairs_implicit
+{ 
+  const char *kmer_ptr_;
+  int k_count;
+} KmerPairsImplicit;
 static_assert(sizeof(KmerPairs) == (sizeof(kmer_t)+sizeof(int)), "struct KmerPairs shouldn't be padded");
 
 //data structure for storing Reads
@@ -995,4 +1009,9 @@ void print_rewire_list (std::vector<size_t>& rewire_pos_list,
                         MacroNode>>& MN_map, 
                         const std::string& func, int num_itr);
 //////////////////////////////////////////////////////////////
+
+
+/////////////// NEW CMD LINE OPTIONS ///////
+extern bool USE_CONCURRENT_KMER_ALGO;
+extern int USE_CONCURRENT_KMER_ALGO_VERSION;
 #endif

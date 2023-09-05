@@ -72,6 +72,220 @@ extern int num_threads;
 extern double p2alltoall_time;
 extern double p2alltoallv_time;
 
+struct kmer_order_t {
+ bool operator()(const std::pair<kmer_t, size_t>& a, 
+     const std::pair<kmer_t, size_t>& b) {
+   return a.first < b.first;
+ }
+}; // struct suffix_prefix_order_t //
+
+struct suffix_prefix_order_t{
+  bool operator()(const std::pair<std::string, size_t>& a,
+      const std::pair<std::string, size_t>& b) {
+    return (a.first < b.first);
+  }
+}; // struct suffix_prefix_order_t //
+
+
+template<typename Container>
+void dump_pakgraph(Container& MN_map) {
+  static int itr=0;
+  ++itr;
+  std::string file_name = "pakgraph-suf-pre-"+std::to_string(itr)+".txt";
+  FILE *f= fopen(file_name.c_str(), "w");
+  if (!f) { 
+    throw std::logic_error("[FAILED]"); 
+  }
+
+  std::vector< std::pair<kmer_t, size_t> > sorted_nodes;
+
+
+  for (size_t it=0; it<MN_map.size(); it++) {
+    sorted_nodes.push_back(std::make_pair(MN_map[it].first, it));
+  }
+  kmer_order_t korder;
+  std::sort(sorted_nodes.begin(), sorted_nodes.end(), korder);
+
+  for (size_t it=0; it<MN_map.size(); it++)
+  {
+    kmer_t key = MN_map[it].first, tmp_kmer;
+   
+    {
+      char mn_str[MN_LENGTH+1];
+      for (int k=0; k<MN_LENGTH; k++) {
+        mn_str[k] = el_to_char(kmerel_mn(key, k));
+      }
+      mn_str[MN_LENGTH] = '\0';
+      fprintf(f, "node: %s\n", mn_str);
+    }
+
+
+    MacroNode &mn = MN_map[it].second;
+    // predecessors //
+
+    fprintf(f, "\nprefixes:  ");
+    std::vector< std::pair<std::string, size_t> > prefixes;
+    for (size_t i=0; i<mn.prefixes.size(); i++) {
+      prefixes.push_back( std::make_pair( mn.prefixes[i].to_string(), i));
+    }
+    suffix_prefix_order_t suffix_prefix_order;
+    std::sort(prefixes.begin(), prefixes.end(), suffix_prefix_order);
+    for (size_t i=0; i<prefixes.size(); i++)
+    {
+      fprintf(f, "%s %s ", prefixes[i].first.c_str(), 
+          mn.prefixes_terminal[ prefixes[i].second ] ? "[T]" : ""); 
+    }
+    fprintf(f, "\nsuffixes:  ");
+    std::vector< std::pair<std::string, size_t> > suffixes;
+    for (size_t i=0; i<mn.suffixes.size(); i++) {
+      suffixes.push_back(std::make_pair(mn.suffixes[i].to_string(), i) );
+    }
+    std::sort(suffixes.begin(), suffixes.end(), suffix_prefix_order);
+    for (size_t i=0; i<suffixes.size(); i++)
+    {
+      fprintf(f, "%s %s ", suffixes[i].first.c_str(),
+          mn.suffixes_terminal[suffixes[i].second ] ? "[T]" : ""); 
+    }
+    fprintf(f, "\n");
+  }
+
+  fclose(f);
+}
+
+template<typename Container>
+void dump_pakgraph_adj(Container& MN_map) {
+  static int itr=0;
+  ++itr;
+  std::string file_name = "pakgraph-succ-pred-"+std::to_string(itr)+".txt";
+  FILE *f= fopen(file_name.c_str(), "w");
+  if (!f) { 
+    throw std::logic_error("[FAILED]"); 
+  }
+
+  std::vector< std::pair<kmer_t, size_t> > sorted_nodes;
+
+
+  for (size_t it=0; it<MN_map.size(); it++) {
+    sorted_nodes.push_back(std::make_pair(MN_map[it].first, it));
+  }
+  kmer_order_t korder;
+  std::sort(sorted_nodes.begin(), sorted_nodes.end(), korder);
+
+  for (size_t it=0; it<MN_map.size(); it++)
+  {
+    kmer_t key = MN_map[it].first, tmp_kmer;
+   
+    {
+      char mn_str[MN_LENGTH+1];
+      for (int k=0; k<MN_LENGTH; k++) {
+        mn_str[k] = el_to_char(kmerel_mn(key, k));
+      }
+      mn_str[MN_LENGTH] = '\0';
+      fprintf(f, "node: %s\n", mn_str);
+    }
+
+
+    MacroNode &mn = MN_map[it].second;
+    // predecessors //
+
+    fprintf(f, "\npredecessors:  ");
+    for (size_t i=0; i<mn.prefixes.size(); i++)
+    {
+       tmp_kmer=0;
+       if (!mn.prefixes_terminal[i]) 
+       { 
+       int len_pref = mn.prefixes[i].size();
+       if (len_pref >= MN_LENGTH) {
+
+           /*extract length=MN_LENGTH from the prefix BPV extension */
+           tmp_kmer = mn.prefixes[i].extract(MN_LENGTH);
+       }
+       else if (len_pref > 0)
+       {
+           size_t remainder = MN_LENGTH - len_pref;
+           tmp_kmer = mn.prefixes[i].extract(len_pref);
+           kmer_t temp_ext = mn_extract_pred(key, remainder);
+           tmp_kmer = ((tmp_kmer << (remainder*2)) | temp_ext);
+       }
+        // print it //
+        {
+          char mn_str[MN_LENGTH+1];
+          for (int k=0; k<MN_LENGTH; k++) {
+            mn_str[k] = el_to_char(kmerel_mn(tmp_kmer, k));
+          }
+          mn_str[MN_LENGTH] = '\0';
+          fprintf(f, "%s ", mn_str);
+        }
+       }
+    }
+
+    fprintf(f, "\nsuccessors:  ");
+    // successors //
+    for (size_t i=0; i<mn.suffixes.size(); i++)
+    {
+        tmp_kmer=0;
+        if (!mn.suffixes_terminal[i])
+        {
+          int len_suff = mn.suffixes[i].size();
+          if (len_suff >= MN_LENGTH) {
+              tmp_kmer = mn.suffixes[i].extract_succ(MN_LENGTH);
+          }
+          else if (len_suff > 0)
+          {
+              size_t remainder = MN_LENGTH - len_suff;
+              tmp_kmer = mn_extract_succ(key, remainder);
+              kmer_t temp_ext = mn.suffixes[i].extract(len_suff);
+              tmp_kmer = ((tmp_kmer << (len_suff*2)) | temp_ext);
+          }
+          {
+            char mn_str[MN_LENGTH+1];
+            for (int k=0; k<MN_LENGTH; k++) {
+                 mn_str[k] = el_to_char(kmerel_mn(tmp_kmer, k));
+            }
+            mn_str[MN_LENGTH] = '\0';
+            fprintf(f, "%s ", mn_str);
+          }
+        }
+    }
+
+    fprintf(f, "\n");
+  }
+
+  fclose(f);
+}
+
+
+
+template<typename Container, typename IdsetIdxes>
+void dump_idset(Container& MN_map, const IdsetIdxes& id_set) {
+  static int itr=0;
+  ++itr;
+  std::string file_name = "pak_idset-"+std::to_string(itr)+".txt";
+  FILE *f= fopen(file_name.c_str(), "w");
+  if (!f) { 
+    throw std::logic_error("[FAILED]"); 
+  }
+
+  std::vector<kmer_t> kmers;
+  for (size_t i=0; i<id_set.size(); i++) {
+    kmer_t key = MN_map[id_set[i]].first;
+    kmers.push_back(key);
+  }
+  std::sort(kmers.begin(), kmers.end());
+
+  for (const kmer_t& kmer : kmers) {
+    {
+      char mn_str[MN_LENGTH+1];
+      for (int k=0; k<MN_LENGTH; k++) {
+           mn_str[k] = el_to_char(kmerel_mn(kmer, k));
+      }
+      mn_str[MN_LENGTH] = '\0';
+      fprintf(f, " %s \n", mn_str);
+    }
+  }
+  fclose(f);
+}
+
 void generate_id_set (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
         std::vector<size_t> &id_list_nodes)
 {
@@ -92,6 +306,9 @@ void generate_id_set (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
     }
 #endif
 
+
+    //dump_pakgraph(MN_map);
+    //dump_pakgraph_adj(MN_map);
     for (size_t it=0; it<MN_map.size(); it++)
     {
           kmer_t key = MN_map[it].first;
@@ -209,6 +426,7 @@ void generate_id_set (std::vector<std::pair<kmer_t,MacroNode>> &MN_map,
               //id_list_nodes.push_back(BeginMN{key,(int)std::distance(MN_map.begin()-it)});
           }
      } // end of for loop
+    //dump_idset(MN_map, id_list_nodes);
 }
 
 
@@ -220,10 +438,6 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
  
      int itr_p=0, itr_s=0;
 
-#ifdef OPT_ITR
-
-     std::vector<int> prealloc_per_proc(size, 0);
-
      for (size_t i=0; i<id_list_nodes.size(); i++)
      {
          itr_p=0;
@@ -231,105 +445,6 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
 
          kmer_t &del_key = MN_map[id_list_nodes[i]].first;
          MacroNode &del_mn = MN_map[id_list_nodes[i]].second;
-
-         for (int k=0; k<del_mn.prefix_begin_info.size(); k++)
-         {
-             if (del_mn.prefix_begin_info[k].num_wires)
-             {
-                 itr_p=k;
-
-                 MnodeInfo search_pred_param;
-                 if ((del_mn.prefixes[itr_p].size() > 0) && (!del_mn.prefixes_terminal[itr_p]))
-                      search_pred_param = retrieve_mn_pinfo(del_mn.prefixes[itr_p], del_mn.k_1_mer);
-
-                 for (int t=0; t<del_mn.prefix_begin_info[k].num_wires; t++)
-                 {
-                     itr_s=del_mn.wiring_info[del_mn.prefix_begin_info[k].prefix_pos+t].suffix_id;
-
-                     if (!(del_mn.prefixes_terminal[itr_p] && del_mn.suffixes_terminal[itr_s])) {
-                         MnodeInfo search_succ_param;
-                         if ((del_mn.suffixes[itr_s].size() > 0) && (!del_mn.suffixes_terminal[itr_s]))
-                              search_succ_param = retrieve_mn_sinfo(del_mn.suffixes[itr_s], del_mn.k_1_mer);
-
-                         std::array<bool, 2> self_loop_info = {false,false};
-                         check_for_self_loops(search_pred_param.search_mn,
-                                              search_succ_param.search_mn,
-                                              del_key,
-                                              self_loop_info);
-
-                         if (!del_mn.prefixes_terminal[itr_p]) {
-                             if (!self_loop_info[0]) {
-                                 prealloc_per_proc[retrieve_proc_id(search_pred_param.search_mn)]++;
-                             }
-                         }
-
-                         if (!del_mn.suffixes_terminal[itr_s]) {
-                             if (!self_loop_info[1]) {
-                                 prealloc_per_proc[retrieve_proc_id(search_succ_param.search_mn)]++;
-                             }
-                         }
-                      }
-                   } // end of for loop over num_wires
-
-              } // end of if condition
-          }
-      } // end of for over list of id_set nodes
-
-      for (int i=0; i<size; i++)
-           mn_nodes_per_proc[i].resize(prealloc_per_proc[i]);
-
-      prealloc_per_proc.clear(); 
-      std::vector <int> proc_idx (size,0);
-
-#endif
-
-#ifdef DEBUG_KSIZE
-    char proc_id[3];
-    char output_file_name[25];
-
-    sprintf(proc_id, "%d", rank); 
-    strcpy(output_file_name, "merge_itr");
-    strcpy(&output_file_name[strlen(output_file_name)],proc_id);
-    strcpy(&output_file_name[strlen(output_file_name)],".log");
-    FILE *f = fopen(output_file_name, "w");
-    if (f == NULL)
-    {
-        printf("Error opening file!\n");
-        exit(1);
-    }
-#endif
-
-     //for (size_t i=0; i<id_list_nodes.size(); i++)
-     //for (size_t i=0; i<5; i++)
-     for (size_t i=0; i<id_list_nodes.size(); i++)
-     {
-         itr_p=0;
-         itr_s=0;
-
-         kmer_t &del_key = MN_map[id_list_nodes[i]].first;
-         MacroNode &del_mn = MN_map[id_list_nodes[i]].second;
-
-#ifdef DEBUG_MERGE
-         BasePairVector mn_key = del_mn.k_1_mer;
-
-         kmer_t test_mn=0;
-         for (int l=0; l<MN_LENGTH; l++)
-              test_mn = mnmer_shift(test_mn, mn_key[l]);
-/*
-         std::string out_mn;
-         for (size_t l=0; l<mn_key.size(); l++)
-              out_mn += el_to_char(mn_key[l]);
-
-        char mn_str[MN_LENGTH+1];
-        for (int l=0; l<MN_LENGTH; l++) {
-             mn_str[l] = el_to_char(kmerel_mn(test_mn, l));
-        }
-        mn_str[MN_LENGTH] = '\0';
-*/
-        //printf("Rank: %d is processing key: %lu, basepair: %s, mn_id: %lu, mn: %s, pos: %d\n", rank, del_key,
-        //                                         out_mn.c_str(), test_mn, mn_str, id_list_nodes[i].terminal_prefix_id);
-        assert(test_mn == del_key);
-#endif
 
          for (int k=0; k<del_mn.prefix_begin_info.size(); k++)
          {
@@ -338,7 +453,7 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
                  itr_p=k;
 
                  //BasePairVector p_ext = del_mn.prefixes[itr_p];
-                 MnodeInfo search_pred_param;
+                 MnodeInfo search_pred_param; // (prefix + k_1_mer) = [(a_0..a_k-1)(...)]
                  if ((del_mn.prefixes[itr_p].size() > 0) && (!del_mn.prefixes_terminal[itr_p]))
                       search_pred_param = retrieve_mn_pinfo(del_mn.prefixes[itr_p], del_mn.k_1_mer);
 
@@ -346,13 +461,13 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
                  {
                      itr_s=del_mn.wiring_info[del_mn.prefix_begin_info[k].prefix_pos+t].suffix_id;
                      int count=del_mn.wiring_info[del_mn.prefix_begin_info[k].prefix_pos+t].count;
+                     // visit count of wire[i][j] //
 
                      if (del_mn.prefixes_terminal[itr_p] && del_mn.suffixes_terminal[itr_s]) {
                          BasePairVector partial_contig = del_mn.prefixes[itr_p];
                          partial_contig.append(del_mn.k_1_mer);
                          partial_contig.append(del_mn.suffixes[itr_s]);
                          local_contig_list.push_back(partial_contig);
-                         //output(partial_contig);
                      }
                      else
                      {
@@ -380,53 +495,23 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
                                      else
                                          new_pnode_type=false;
                                  }
-                              //int is_terminal = (new_pnode_type) ? (KTerminal)Y : (KTerminal)N;
-                                 /*ModNodeInfo send_pred_data;
-                                 send_pred_data.modifyMN = search_pred_param;
-                                 send_pred_data.modifyMN_info = MNnodeTuple{del_mn.suffixes[itr_s],
-                                     std::make_pair(std::min(del_mn.prefix_count[itr_p].first,
-                                                 del_mn.suffix_count[itr_s].first), count),
-                                     new_pnode_type};
-                                 send_pred_data.direction=(KdirType)P;
-                                 */
-#ifdef OPT_ITR
-                                 int node_id = retrieve_proc_id(search_pred_param.search_mn);
-                                 assert(proc_idx[node_id] < mn_nodes_per_proc[node_id].size());
-                                 mn_nodes_per_proc[node_id][proc_idx[node_id]] = send_pred_data;
-                                 proc_idx[node_id]++;
-#else               
-                                 mn_nodes_per_proc[retrieve_proc_id(search_pred_param.search_mn)].push_back(TransferNode{
-                                     search_pred_param.search_mn, search_pred_param.search_ext, del_mn.suffixes[itr_s],
-                                     std::make_pair(std::min(del_mn.prefix_count[itr_p].first, del_mn.suffix_count[itr_s].first), count),
+                                 mn_nodes_per_proc[retrieve_proc_id(search_pred_param.search_mn)].push_back(
+                                     TransferNode{
+                                      search_pred_param.search_mn,  //k1mer //
+                                      search_pred_param.search_ext, //middle //
+                                      del_mn.suffixes[itr_s], // suffix//
+                                     std::make_pair(
+                                         std::min(del_mn.prefix_count[itr_p].first, 
+                                                  del_mn.suffix_count[itr_s].first),
+                                         count),
                                      new_pnode_type, (KdirType)P}
                                      );
-#ifdef DEBUG_KSIZE
-                                 char mn_str1[MN_LENGTH+1], mn_str2[MN_LENGTH+1];
-                                 for (int k=0; k<MN_LENGTH; k++) {
-                                 mn_str1[k] = el_to_char(kmerel_mn(del_key, k));
-                                 mn_str2[k] = el_to_char(kmerel_mn(search_pred_param.search_mn, k));
-                                 }
-                                 mn_str1[MN_LENGTH] = '\0';
-                                 mn_str2[MN_LENGTH] = '\0';
-#ifdef EXTEND_KMER
-                                fprintf(f, "Pred: prefix_size: %lu, itr_p: %d, key_str: %s, new_key_str: %s dest rank: %d\n",
-                                             del_mn.prefixes[itr_p].size(), itr_p, mn_str1, mn_str2, retrieve_proc_id(search_pred_param.search_mn));
-#else
-
-                                 fprintf(f, "Pred: prefix_size: %lu, itr_p: %d, key:%lu, key_str: %s, new_key: %lu, new_key_str: %s\n",
-                                             del_mn.prefixes[itr_p].size(), itr_p, del_key, mn_str1, search_pred_param.search_mn, mn_str2);
-#endif
-
-#endif
-
-#endif
                                  
                              }
                          }
 
                          if (!del_mn.suffixes_terminal[itr_s]) {
                              if (!self_loop_info[1]) {
-
                                  //determine new value terminal
                                  bool new_snode_type=false;
                                  if (del_mn.prefixes_terminal[itr_p])
@@ -437,44 +522,14 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
                                      else
                                          new_snode_type=false;
                                  }
-                                 /*
-                                 ModNodeInfo send_succ_data;
-                                 send_succ_data.modifyMN = search_succ_param;
-                                 send_succ_data.modifyMN_info = MNnodeTuple{del_mn.prefixes[itr_p],
-                                     std::make_pair(std::min(del_mn.prefix_count[itr_p].first,
-                                                 del_mn.suffix_count[itr_s].first), count),
-                                     new_snode_type};
-                                 send_succ_data.direction=(KdirType)S;
-                                 */
-#ifdef OPT_ITR
-                                 int node_id = retrieve_proc_id(search_succ_param.search_mn);
-                                 assert(proc_idx[node_id] < mn_nodes_per_proc[node_id].size());
-                                 mn_nodes_per_proc[node_id][proc_idx[node_id]] = send_succ_data;
-                                 proc_idx[node_id]++;
-#else
-                                 //mn_nodes_per_proc[retrieve_proc_id(search_succ_param.search_mn)].push_back(send_succ_data);
                                  mn_nodes_per_proc[retrieve_proc_id(search_succ_param.search_mn)].push_back(TransferNode{
-                                    search_succ_param.search_mn, search_succ_param.search_ext, del_mn.prefixes[itr_p],
+                                    
+                                     search_succ_param.search_mn, 
+                                     search_succ_param.search_ext, 
+                                     del_mn.prefixes[itr_p],
                                     std::make_pair(std::min(del_mn.prefix_count[itr_p].first, del_mn.suffix_count[itr_s].first), count),
                                     new_snode_type, (KdirType)S}
                                  );
-#ifdef DEBUG_KSIZE
-
-#ifdef EXTEND_KMER
-                                char mn_succ1[MN_LENGTH+1], mn_succ2[MN_LENGTH+1];
-                                 for (int k=0; k<MN_LENGTH; k++) {
-                                 mn_succ1[k] = el_to_char(kmerel_mn(del_key, k));
-                                 mn_succ2[k] = el_to_char(kmerel_mn(search_succ_param.search_mn, k));
-                                 }
-                                 mn_succ1[MN_LENGTH] = '\0';
-                                 mn_succ2[MN_LENGTH] = '\0';
-                                 fprintf(f, "Succ: key:%s, new_key: %s, dest rank: %d\n",mn_succ1, mn_succ2, retrieve_proc_id(search_succ_param.search_mn));
-#else
-                                 fprintf(f, "Succ: key:%lu, new_key: %lu\n",del_key, search_succ_param.search_mn);
-#endif
-
-#endif
-#endif
                              }
                          }
 
@@ -489,14 +544,6 @@ void iterate_and_pack_mn (std::vector<size_t>& id_list_nodes,
 
                      //[](auto& elem){ return elem.first == del_key;} ), 
      }// end of for for list of nodes in id_set
-
-#ifdef DEBUG_KSIZE
-     fclose(f);
-#endif
-
-#ifdef OPT_ITR
-     proc_idx.clear();
-#endif
 
 }
 
@@ -1315,10 +1362,6 @@ void push_to_pred (TransferNode &new_mnode, int pos,
             mn_found.suffixes_terminal[idx]=new_ntype;
         }
     }
-
-//#ifdef DEBUG_SERMOD
-    //mn_found.setup_wiring();
-
 }
 
 

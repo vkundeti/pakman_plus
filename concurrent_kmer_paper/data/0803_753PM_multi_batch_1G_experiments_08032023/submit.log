@@ -1,0 +1,129 @@
+./chimp.AACZ00.100m.fasta
+./chimp.AACZ00.1Billion.fasta
+./chimp.AACZ00.30m.fasta
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.4-%J.out --error=pakman.chimp.AACZ00.100m.default.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.1.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.4-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.2.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.4-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.3.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.8-%J.out --error=pakman.chimp.AACZ00.100m.default.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.4.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.8-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.5.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.8-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.6.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.16-%J.out --error=pakman.chimp.AACZ00.100m.default.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.7.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.16-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.8.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.16-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.9.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.32-%J.out --error=pakman.chimp.AACZ00.100m.default.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.10.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.32-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.11.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.32-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.12.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.64-%J.out --error=pakman.chimp.AACZ00.100m.default.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.13.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.64-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.14.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.64-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.15.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.128-%J.out --error=pakman.chimp.AACZ00.100m.default.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.16.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.128-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.17.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.128-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.18.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.default.224-%J.out --error=pakman.chimp.AACZ00.100m.default.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  >& run.19.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.224-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v0.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.20.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.224-%J.out --error=pakman.chimp.AACZ00.100m.concurrent-kmer.v1.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.100m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.21.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.4-%J.out --error=pakman.chimp.AACZ00.1Billion.default.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.22.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.4-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.23.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.4-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.24.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.8-%J.out --error=pakman.chimp.AACZ00.1Billion.default.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.25.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.8-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.26.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.8-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.27.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.16-%J.out --error=pakman.chimp.AACZ00.1Billion.default.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.28.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.16-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.29.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.16-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.30.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.32-%J.out --error=pakman.chimp.AACZ00.1Billion.default.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.31.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.32-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.32.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.32-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.33.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.64-%J.out --error=pakman.chimp.AACZ00.1Billion.default.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.34.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.64-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.35.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.64-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.36.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.128-%J.out --error=pakman.chimp.AACZ00.1Billion.default.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.37.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.128-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.38.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.128-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.39.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.default.224-%J.out --error=pakman.chimp.AACZ00.1Billion.default.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  >& run.40.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.224-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v0.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.41.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.224-%J.out --error=pakman.chimp.AACZ00.1Billion.concurrent-kmer.v1.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.1Billion.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.42.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.4-%J.out --error=pakman.chimp.AACZ00.30m.default.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.43.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.4-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.44.log &
+
+ srun -p regular --nodes=4 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.4-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.4-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.45.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.8-%J.out --error=pakman.chimp.AACZ00.30m.default.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.46.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.8-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.47.log &
+
+ srun -p regular --nodes=8 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.8-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.8-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.48.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.16-%J.out --error=pakman.chimp.AACZ00.30m.default.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.49.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.16-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.50.log &
+
+ srun -p regular --nodes=16 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.16-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.16-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.51.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.32-%J.out --error=pakman.chimp.AACZ00.30m.default.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.52.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.32-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.53.log &
+
+ srun -p regular --nodes=32 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.32-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.32-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.54.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.64-%J.out --error=pakman.chimp.AACZ00.30m.default.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.55.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.64-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.56.log &
+
+ srun -p regular --nodes=64 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.64-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.64-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.57.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.128-%J.out --error=pakman.chimp.AACZ00.30m.default.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.58.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.128-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.59.log &
+
+ srun -p regular --nodes=128 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.128-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.128-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.60.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.default.224-%J.out --error=pakman.chimp.AACZ00.30m.default.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  >& run.61.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.224-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v0.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 0  >& run.62.log &
+
+ srun -p regular --nodes=224 --ntasks-per-node=1 --exclusive --output=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.224-%J.out --error=pakman.chimp.AACZ00.30m.concurrent-kmer.v1.224-%J.err ./pakman-mpi -f ./chimp.AACZ00.30m.fasta -r 100 -c 100 -b 1000000000  -i -p 1  >& run.63.log &

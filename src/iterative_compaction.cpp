@@ -133,7 +133,8 @@ size_t begin_iterative_compaction (std::vector<std::pair<kmer_t,MacroNode>> &MN_
 {
 
 //#ifdef PHASE2
-    size_t num_nodes=0, global_num_nodes=0;
+    size_t num_nodes=0, global_num_nodes=0, global_min_nodes=0,
+           global_max_nodes=0;
 #ifdef DEBUG_P2TIME
     size_t id_set_size=0, global_id_set_size=0;
 
@@ -168,6 +169,8 @@ size_t begin_iterative_compaction (std::vector<std::pair<kmer_t,MacroNode>> &MN_
     double update_mn=0.0, global_update_mn=0.0;
 
     double mn11 = MPI_Wtime ();
+    double time_for_iteration_start = MPI_Wtime(),
+           time_for_iteration_end = 0.0, time_for_iteration=0.0;
 
     if (rank==0)
         fprintf(stderr, "Starting phase 2 iterative phase\n");
@@ -180,9 +183,23 @@ size_t begin_iterative_compaction (std::vector<std::pair<kmer_t,MacroNode>> &MN_
      rewire_pos_list.clear();
 
      MPI_Allreduce(&num_nodes, &global_num_nodes, 1, MPI_UINT64_T, MPI_SUM, MPI_COMM_WORLD);
+     MPI_Allreduce(&num_nodes, &global_min_nodes, 1, MPI_UINT64_T, MPI_MIN, MPI_COMM_WORLD);
+     MPI_Allreduce(&num_nodes, &global_max_nodes, 1, MPI_UINT64_T, MPI_MAX, MPI_COMM_WORLD);
+
+     if ((num_itr > 1) && (rank==0))
+     {
+       time_for_iteration_end = MPI_Wtime();
+       time_for_iteration = (time_for_iteration_end - time_for_iteration_start);
+       printf("Itr: %d, Total time for this iteration: %f\n\n", num_itr-1,
+           time_for_iteration);
+       time_for_iteration_start = time_for_iteration_end;
+     }
 #ifdef DEBUG_P2TIME
      if (rank == 0)
-         printf("Itr: %d, Total number of macro_nodes across all proc's: %lu\n", num_itr, global_num_nodes);
+         printf("Itr: %d, Total number of macro_nodes across all proc's: %lu "
+             "[min=%lu max=%lu] expected=%f\n", num_itr, global_num_nodes,
+             global_min_nodes, global_max_nodes, 
+             (double)(global_num_nodes)/(double)(size));
 
 #ifdef PRINT_P2STATS
      if (rank == 0)
@@ -443,8 +460,6 @@ size_t begin_iterative_compaction (std::vector<std::pair<kmer_t,MacroNode>> &MN_
 //#endif // end of MOD_REWIRE
 
  } // end of while loop
-
-    
 
 }
  

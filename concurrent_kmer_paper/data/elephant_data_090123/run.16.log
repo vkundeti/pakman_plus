@@ -1,0 +1,6 @@
+srun: job 7933 queued and waiting for resources
+srun: job 7933 has been allocated resources
+srun: error: thor-096: task 3: Aborted (core dumped)
+srun: error: thor-095: task 2: Aborted (core dumped)
+srun: error: thor-094: task 1: Aborted (core dumped)
+srun: error: thor-093: task 0: Aborted (core dumped)

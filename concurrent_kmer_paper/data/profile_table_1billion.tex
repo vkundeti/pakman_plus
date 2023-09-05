@@ -1,0 +1,28 @@
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|l|l|}
+\hline
+\multicolumn{11}{|c|}{Genome=AACZ00(chimp) Read Count=1000000000  Distinct k-mers=2288779860}\\
+\hline
+ \multicolumn{2}{|c|}{} & \multicolumn{2}{|c|}{Gen.k-mers}& \multicolumn{2}{|c|}{GraphBuild} & \multicolumn{2}{|c|}{Itr.Compact} & \multicolumn{2}{|c|}{Gather-Walk} & End-to-End\\
+\hline
+ Nodes & Itr. Count & Time(sec) & Contrib. & Time(sec)& Contrib. & Time(sec) & Contrib. & Time(sec) & Contrib & Total-Time(sec) \\
+\hline
+4 &  740 & 6659.476 & 76.312\% & 85.110 & 0.975\%  & 1884.427 & 21.594\% & 97.686 & 1.119\%  & 8726.7  \\ 
+\hline
+8 &  731 & 2820.839 & 71.470\% & 46.761 & 1.185\%  & 1019.120 & 25.821\% & 60.140 & 1.524\%  & 3946.86  \\ 
+\hline
+16 &  739 & 1280.660 & 67.137\% & 23.620 & 1.238\%  & 569.549 & 29.858\% & 33.701 & 1.767\%  & 1907.53  \\ 
+\hline
+32 &  722 & 598.835 & 60.699\% & 11.975 & 1.214\%  & 358.782 & 36.367\% & 16.975 & 1.721\%  & 986.567  \\ 
+\hline
+64 &  733 & 290.279 & 51.923\% & 6.961 & 1.245\%  & 250.404 & 44.791\% & 11.410 & 2.041\%  & 559.054  \\ 
+\hline
+128 &  716 & 134.577 & 38.972\% & 3.873 & 1.122\%  & 191.061 & 55.329\% & 15.804 & 4.577\%  & 345.316  \\ 
+\hline
+224 &  741 & 78.762 & 34.485\% & 3.802 & 1.665\%  & 137.187 & 60.066\% & 8.644 & 3.785\%  & 228.396  \\ 
+\hline
+\multicolumn{11}{|c|}{Normalized Avg. Contribution of Component to Runtime}\\\hline 
+ \multicolumn{2}{|c|}{} & \multicolumn{2}{|c|}{Gen.k-mers}& \multicolumn{2}{|c|}{GraphBuild} & \multicolumn{2}{|c|}{Itr.Compact} & \multicolumn{2}{|c|}{Gather-Walk} & End-to-End\\
+\hline
+\multicolumn{2}{|c|}{} & \multicolumn{2}{|c|} {57.285\%} & \multicolumn{2}{|c|}{1.235\%} & \multicolumn{2}{|c|}{39.118\%} & \multicolumn{2}{|c|}{2.362\%} & 100\% \\
+\hline
+\end{tabular}
